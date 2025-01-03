@@ -44,13 +44,13 @@ $route['translate_uri_dashes'] = FALSE;
 
 // Friend Requests
 $route['send-friend-request'] = 'FriendRequestController/sendRequest';
-$route['get-requests/(:num)'] = 'FriendRequestController/getRequests/$1';
-$route['respond-friend-request/(:num)'] = 'FriendRequestController/respondRequest/$1';
+$route['get-requests'] = 'FriendRequestController/getRequests';
+$route['respond-friend-request'] = 'FriendRequestController/respondRequest';
 $route['get-friends/(:num)'] = 'FriendRequestController/getFriends/$1';
 
 // Stories
 $route['upload-story'] = 'StoriesController/uploadStory';
-$route['get-stories/(:num)'] = 'StoriesController/getStories/$1';
+$route['get-stories/(:num)'] = 'StoriesController/getStoriesofUser/$1';
 $route['mark-story-viewed/(:num)'] = 'StoriesController/markStoryAsViewed/$1';
 $route['react-to-story/(:num)'] = 'StoriesController/reactToStory/$1';
 $route['delete-expired-stories'] = 'StoriesController/deleteExpiredStories';

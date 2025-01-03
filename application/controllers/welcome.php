@@ -22,7 +22,13 @@ class Welcome extends CI_Controller {
 	{
 		$this->load->view('welcome_message');
 		$this->load->database();
-	
+		
+		// $connection = new mysqli('192.168.0.133','Vishal','Vishal@123','db1');
+
+		// if($connection->connect_error){
+		// 	die("Connection failed" . $connection->connect_error);
+		// }
+		// echo "Coonce succes";	
 	}
 }
 
