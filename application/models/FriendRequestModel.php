@@ -47,7 +47,12 @@ class FriendRequestModel extends CI_Model {
         // Run the query and return the results
         return $this->db->get('friend_requests')->result_array();
     }
-
+    public function deleterequest($requestId){
+        $this->db->where('id',$requestId);
+        
+        return $this->db->delete('friend_requests');
+        
+    }
     // Add a user to the Friends table
     // public function addFriend($data) {
     //     return $this->db->insert('friends', $data);

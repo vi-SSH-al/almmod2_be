@@ -115,8 +115,8 @@ class FriendRequestController extends CI_Controller {
     //params required: requestid, 
     public function respondRequest() {
         $status = $this->input->post('status'); // accepted/rejected
-        $requestId = $this->input->post('requestid'); // request id 
-        $user_id = $this->input->post('receiver_id');
+        $request_id = $this->input->post('request_id'); // request id 
+        $user_id = $this->input->post('user_id');
         //$user_id = $this->session->userdata('user_data');
 
 
@@ -126,21 +126,29 @@ class FriendRequestController extends CI_Controller {
                                 ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid status value.']));
         }
 
-        $response = $this->FriendRequestModel->respondRequest($requestId, $status);
+        $response = $this->FriendRequestModel->respondRequest($request_id, $status);
 
         if ($response) {
             if ($status === 'accepted') {
                 $notification = [
                     'user_id' => $user_id,
-                    'message' => "You are now friends with " . $this->input->post('sender_name'),
+                    'message' => "You are now friends ",
                    
                 ];
                 $this->NotificationModel->addNotification($notification);
-    
+
+              //  $this->FriendRequestModel->deleterequest($request_id);
                 return $this->output->set_status_header(200)
                                     ->set_content_type('application/json')
-                                    ->set_output(json_encode(['status' => 'success', 'message' => 'Request processed successfully.']));
-            }
+                                    ->set_output(json_encode(['status' => 'success', 'message' => 'Request accepted successfully.']));
+            }   
+            else{
+            $this->FriendRequestModel->deleterequest($request_id);
+            return $this->output->set_status_header(200)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => 'success', 'message' => 'Request rejected successfully.']));
+
+        }
         } else {
             return $this->output->set_status_header(500)
                                 ->set_content_type('application/json')
