@@ -214,7 +214,10 @@ $config['log_date_format'] = 'Y-m-d H:i:s';
 |
 */
 $config['cache_path'] = '';
+$config['cors_enabled'] = TRUE;
 
+// Add this in the config file to allow CORS
+$config['allowed_origins'] = '*';
 /*
 |--------------------------------------------------------------------------
 | Encryption Key
@@ -224,7 +227,7 @@ $config['cache_path'] = '';
 | MUST set an encryption key.  See the user guide for info.
 |
 */
-$config['encryption_key'] = '';
+$config['encryption_key'] = 'almashines';
 
 /*
 |--------------------------------------------------------------------------

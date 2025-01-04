@@ -39,9 +39,9 @@
 */
 
 $route['default_controller'] = 'welcome';
-$route['404_override'] = '';
-$route['translate_uri_dashes'] = FALSE;
 
+$route['translate_uri_dashes'] = FALSE;
+//$route['404_override'] = '';
 // Friend Requests
 $route['send-friend-request'] = 'FriendRequestController/sendRequest';
 $route['get-requests'] = 'FriendRequestController/getRequests';
@@ -55,7 +55,18 @@ $route['mark-story-viewed/(:num)'] = 'StoriesController/markStoryAsViewed/$1';
 $route['react-to-story/(:num)'] = 'StoriesController/reactToStory/$1';
 $route['delete-expired-stories'] = 'StoriesController/deleteExpiredStories';
 
+
+// Posts-related routes
+$route['posts/create'] = 'PostController/createPost';  // POST: Create a new post
+$route['posts/delete/(:num)'] = 'PostController/deletePost/$1';  // POST: Delete a post by post ID
+$route['posts/feed'] = 'PostController/getFeed';  // GET: Get paginated feed
+$route['posts/like/(:num)'] = 'PostController/likePost/$1';  // POST: Like a post by post ID
+$route['posts/comment/(:num)'] = 'PostController/addComment/$1';  // POST: Add a comment to a post by post ID
+$route['posts/getcomments/(:num)'] = 'PostController/getComments/$1'; // Get all comments of a post by postIdś
+ 
+$route['get-notifications/(:num)'] = 'NotificationController/getNotificationofUser/$1';
 $route['api/employees'] = 'DemoController/get_all_employees';
+// $route['404_override'] = '';
 // Add more routes as needed
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

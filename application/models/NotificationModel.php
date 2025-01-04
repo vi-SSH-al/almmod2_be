@@ -23,5 +23,17 @@ class NotificationModel extends CI_Model {
     public function addNotification($data) {
         return $this->db->insert('notifications', $data);
     }
+    public function addNotificationforPost($data) {
+        $frds = $data['frd'];
+
+        foreach ($frds as $frd){
+            $notificationdata =[
+                'user_id'=> $frd,
+                'message'=> "Your connections share a new post !! Click to see now : "
+            ];
+            $this->db->insert('notifications', $notificationdata);
+        }
+        return $this->db->affected_rows();
+    }
 }
 ?>
