@@ -1,6 +1,9 @@
 
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+header('Access-Control-Allow-Origin: *');  // Allow all origins
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');  // Allow these methods
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 class FriendRequestController extends CI_Controller {
 
