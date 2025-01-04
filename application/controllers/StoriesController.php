@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+header('Access-Control-Allow-Origin: *');  // Allow all origins
+        header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');  // Allow these methods
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
 class StoriesController extends CI_Controller {
 
     public function __construct() {
@@ -69,7 +71,7 @@ class StoriesController extends CI_Controller {
         // Try to upload the file
         if (!$this->upload->do_upload('media')) {
             return $this->output->set_content_type('application/json')
-                                ->set_output(json_encode(['status' => 'error', 'message' => $this->upload->display_errors()]));
+                                ->set_output(json_encode(['status' => 'error', 'message' => "Error in uploading stories ". $this->upload->display_errors()]));
         }
 
         // Get uploaded file data
