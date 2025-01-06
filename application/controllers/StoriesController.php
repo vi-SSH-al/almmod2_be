@@ -45,15 +45,19 @@ class StoriesController extends CI_Controller {
     // Upload a Story
     public function uploadStory() {
 
-    // getting user Id from cookies
-    //$user_id = $this->session->userdata('user_id');
+        // getting user Id from sessions
+        //$user_id = $this->session->userdata('user_id');
 
-//     $_FILES is an associative array, and it contains the following keys:
-// $_FILES['file']['name']: The original name of the uploaded file (as it was on the user's computer).
-// $_FILES['file']['type']: The MIME type of the uploaded file (e.g., image/jpeg, application/pdf).
-// $_FILES['file']['tmp_name']: The temporary file path where the uploaded file is stored on the server.
-// $_FILES['file']['error']: The error code (if any) related to the file upload (e.g., 0 means no error).
-// $_FILES['file']['size']: The size of the uploaded file in bytes
+        //     $_FILES is an associative array, and it contains the following keys:
+        // $_FILES['file']['name']: The original name of the uploaded file (as it was on the user's computer).
+        // $_FILES['file']['type']: The MIME type of the uploaded file (e.g., image/jpeg, application/pdf).
+        // $_FILES['file']['tmp_name']: The temporary file path where the uploaded file is stored on the server.
+        // $_FILES['file']['error']: The error code (if any) related to the file upload (e.g., 0 means no error).
+        // $_FILES['file']['size']: The size of the uploaded file in bytes
+                
+        //$user_id = $this->session->userdata('user_id');
+        $user_id = $this->input->post('user_id');
+
         // Check if a file is uploaded
         if (empty($_FILES['media']['name'])) {
             return $this->output->set_content_type('application/json')
@@ -81,8 +85,8 @@ class StoriesController extends CI_Controller {
         // Prepare data for the database
         date_default_timezone_set('Asia/Kolkata');
         $storyData = [
-            //$user_id = $this->session->userdata('user_id');
-            'user_id' => $this->input->post('user_id'),
+ 
+            'user_id' => $user_id,
             'media_url' => $mediaPath,
             'expires_at' => date('Y-m-d H:i:s', strtotime('+24 hours'))
         ];
@@ -135,10 +139,10 @@ class StoriesController extends CI_Controller {
     // Mark Story as Viewed
     public function markStoryAsViewed($storyId) {
         
-    // getting user Id from cookies
-    //$viewerId = $this->session->userdata('user_id');
-    $data = json_decode(file_get_contents('php://input'), true);
-     //   $viewerId = $this->input->post('viewer_id');
+        // getting user Id from cookies
+        //$viewerId = $this->session->userdata('user_id');
+        $data = json_decode(file_get_contents('php://input'), true);
+        //   $viewerId = $this->input->post('viewer_id');
         $viewerId =  $data['userId'];
         // Validate input
         if (empty($storyId) || empty($viewerId)) {

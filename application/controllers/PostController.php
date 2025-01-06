@@ -3,11 +3,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 header('Access-Control-Allow-Origin: *');  // Allow all origins
         header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');  // Allow these methods
         header('Access-Control-Allow-Headers: Content-Type, Authorization');
-class PostsController extends CI_Controller {
+
+
+class PostController extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('PostsModel');
+        $this->load->model('PostModel');
         $this->load->model('NotificationModel');
         $this->load->model('FriendRequestModel');
         $this->load->helper('url');
@@ -44,7 +46,7 @@ class PostsController extends CI_Controller {
             $files = $_FILES['media'];
            
 
-            for ($i = 0; $i < count($files['name']); $i++) {
+            for ($i = 0; $i < count($_FILES['media']['name']); $i++) {
                 $_FILES['file']['name']     = $files['name'][$i];
                 $_FILES['file']['type']     = $files['type'][$i];
                 $_FILES['file']['tmp_name'] = $files['tmp_name'][$i];
@@ -60,7 +62,7 @@ class PostsController extends CI_Controller {
 
                 if (!$this->upload->do_upload('file')) {
                     return $this->output->set_content_type('application/json')
-                                        ->set_output(json_encode(['status' => 'error', 'message' => $this->upload->display_errors()]));
+                                        ->set_output(json_encode(['status' => 'error',"count"=>count($_FILES['media']['name']),"fileas are"=>$_FILES['media'],'message' => $this->upload->display_errors()]));
                 }
 
                 $mediaData = $this->upload->data();
@@ -69,13 +71,14 @@ class PostsController extends CI_Controller {
         }
 
         // Save post and media
-        $response = $this->PostsModel->createPost($userId, $content, $mediaUrls);
+        $response = $this->PostModel->createPost($userId, $content, $mediaUrls);
 
         $frd = $this->FriendRequestModel->getFriendsList($userId);
+        $frdIds = array_column($frd, 'friend_id');
         if($response){
             $notification = [
-                'user_id' => $frd,
-                'message' => "You have a new friend request.",
+                'user_ids' => $frdIds,
+                'message' => "Your friend created a post.",
              
             ];
             $this->NotificationModel->addNotificationforPost($notification);
@@ -89,17 +92,24 @@ class PostsController extends CI_Controller {
     // Delete a post
     public function deletePost($postId) {
         $userId = $this->input->post('user_id');
-        $response = $this->PostsModel->deletePost($postId, $userId);
+        $response = $this->PostModel->deletePost($postId, $userId);
 
+        if($response){
         return $this->output->set_content_type('application/json')
-                            ->set_output(json_encode($response));
+                            ->set_output(json_encode(["status"=>"success", "message"=>"Post deleted succesfully"]));}
+        else{
+            return $this->output->set_content_type('application/json')
+            ->set_output(json_encode(["status"=>"failed", "message"=>"Post deleted not succesfully"]));
+        }
+
     }
+    
 
     // Get paginated feed
     public function getFeed() {
         $offset = $this->input->get('offset') ?: 0;
         $sort = $this->input->get('sort') ?: 'recent'; // recent/oldest
-        $response = $this->PostsModel->getFeed($offset, $sort);
+        $response = $this->PostModel->getFeed($offset, $sort);
 
         return $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
@@ -109,10 +119,14 @@ class PostsController extends CI_Controller {
         // take useriD from session
          //$userId = $this->session->userdata('user_id');
         $userId = $this->input->post('user_id');
-        $response = $this->PostsModel->likePost($postId, $userId);
+        $response = $this->PostModel->likePost($postId, $userId);
 
         return $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
+
+    // public function countlikesofPost($postId){
+
+    // }
 
     // Add a comment
     public function addComment($postId) {
@@ -124,11 +138,14 @@ class PostsController extends CI_Controller {
         $commentData = [
             'post_id' => $postId,
             'user_id' => $user_id,
-            'parent_comment_id' => $this->input->post('parent_comment_id'),
+          //  'parent_comment_id' => $this->input->post('parent_comment_id'),
             'content' => $this->input->post('content')
         ];
-
-        $response = $this->PostsModel->addComment($commentData);
+        $parent_comment = $this->input->post('parent_comment_id');
+        if( $parent_comment){
+            $commentData['parent_comment_id'] =  $parent_comment;
+        }
+        $response = $this->PostModel->addComment($commentData);
 
         return $this->output->set_content_type('application/json')
                             ->set_output(json_encode($response));
@@ -136,7 +153,7 @@ class PostsController extends CI_Controller {
 
     // get comments of a postid
     public function getComments($postId){
-        $response = $this->postModel->getComments($postId);
+        $response = $this->PostModel->getCommentsofPost($postId);
         return $this->output->set_content_type('application/json')
                             ->set_output(json_encode($response));
     }

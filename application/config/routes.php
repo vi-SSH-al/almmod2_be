@@ -41,7 +41,7 @@
 $route['default_controller'] = 'welcome';
 
 $route['translate_uri_dashes'] = FALSE;
-//$route['404_override'] = '';
+$route['404_override'] = '';
 // Friend Requests
 $route['send-friend-request'] = 'FriendRequestController/sendRequest';
 $route['get-requests'] = 'FriendRequestController/getRequests';
