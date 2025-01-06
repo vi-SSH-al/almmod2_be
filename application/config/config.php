@@ -363,3 +363,7 @@ $config['proxy_ips'] = '';
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */
+$config['cors_enabled'] = TRUE;
+
+// Add this in the config file to allow CORS
+$config['allowed_origins'] = '*';
