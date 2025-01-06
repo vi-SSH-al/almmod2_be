@@ -2,7 +2,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 header('Access-Control-Allow-Origin: *');  // Allow all origins
-        header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');  // Allow these methods
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');  // Allow these methods
         header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 
@@ -171,7 +171,7 @@ class FriendRequestController extends CI_Controller {
 
         $friends = $this->FriendRequestModel->getFriendsList($userId);
 
-        return $this->output->set_status_header(200)
+        return $this->output->set_status_header(200)    
                             ->set_content_type('application/json')
                             ->set_output(json_encode(['status' => 'success', 'data' => $friends]));
     }

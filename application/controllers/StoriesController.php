@@ -2,13 +2,14 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 header('Access-Control-Allow-Origin: *');  // Allow all origins
         header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');  // Allow these methods
-        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+        header('Access-Control-Allow-Headers: Content-Typ   e, Authorization');
 class StoriesController extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
         $this->load->model('StoriesModel');
         $this->load->model('NotificationModel');
+        $this->load->model('FriendRequestModel');
         $this->load->helper('url'); 
     }
 
@@ -179,6 +180,45 @@ class StoriesController extends CI_Controller {
         $response = $this->StoriesModel->reactToStory($reactionData);
         return $this->output->set_content_type('application/json')
                             ->set_output(json_encode($response));
+    }
+
+    public function getFriendsStories($userId){
+        if (!is_numeric($userId)) {
+            return $this->output->set_status_header(400)
+                                ->set_content_type('application/json')
+                                ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid user ID.',"data is "=>$data2]));
+        }
+
+        $friends = $this->FriendRequestModel->getFriendsList($userId);
+        $frds_id = [];
+
+        foreach($friends as $frd){
+            array_push($frds_id, $frd["friend_id"]);
+        }
+        
+        $res=[];
+        foreach($frds_id as $ids){
+
+            // $stories =  $this->StoriesModel->getStories($userId);
+        
+            // foreach ($stories as &$story) {
+            //     $story['media_url'] = base_url($story['media_url']); // Add the base URL to media URL
+
+            // }
+            $stories = $this->StoriesModel->getStories($ids);
+         
+            // Add base URL to the media paths of each story
+            foreach ($stories as &$story) {
+                $story['media_url'] = base_url($story['media_url']); // Add the base URL to media URL
+                //echo "id is ".$ids . "story['emdia'] ". $story['media_url'];
+            }
+            $res[$ids] = $stories;
+        }
+        return $this->output->set_status_header(200)
+                            ->set_content_type('application/json')
+                            ->set_output(json_encode(['status' => 'success', 'data' => $res]));
+
+        
     }
 
     // Delete Expired Stories
