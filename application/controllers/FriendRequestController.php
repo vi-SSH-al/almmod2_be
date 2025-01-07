@@ -116,11 +116,18 @@ class FriendRequestController extends CI_Controller {
      */
     //params required: requestid, 
     public function respondRequest() {
-        $status = $this->input->post('status'); // accepted/rejected
-        $request_id = $this->input->post('request_id'); // request id 
-        $user_id = $this->input->post('user_id');
+
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        // $status = $this->input->post('status'); // accepted/rejected
+        // $request_id = $this->input->post('request_id'); // request id 
+        // $user_id = $this->input->post('user_id');
         //$user_id = $this->session->userdata('user_data');
 
+        $status = $data['status'];
+        $request_id = $data['request_id'];
+        $user_id = $data['user_id'];
+        
 
         if (!in_array($status, ['accepted', 'rejected'])) {
             return $this->output->set_status_header(400)
@@ -145,10 +152,10 @@ class FriendRequestController extends CI_Controller {
                                     ->set_output(json_encode(['status' => 'success', 'message' => 'Request accepted successfully.']));
             }   
             else{
-            $this->FriendRequestModel->deleterequest($request_id);
-            return $this->output->set_status_header(200)
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['status' => 'success', 'message' => 'Request rejected successfully.']));
+                $this->FriendRequestModel->deleterequest($request_id);
+                return $this->output->set_status_header(200)
+                                    ->set_content_type('application/json')
+                                    ->set_output(json_encode(['status' => 'success', 'message' => 'Request rejected successfully.']));
 
         }
         } else {

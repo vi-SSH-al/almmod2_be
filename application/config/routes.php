@@ -52,7 +52,7 @@ $route['get-friends/(:num)'] = 'FriendRequestController/getFriends/$1';
 $route['upload-story'] = 'StoriesController/uploadStory';
 $route['get-stories/(:num)'] = 'StoriesController/getStoriesofUser/$1';
 $route['mark-story-viewed/(:num)'] = 'StoriesController/markStoryAsViewed/$1';
-$route['react-to-story/(:num)'] = 'StoriesController/reactToStory/$1';
+$route['react-to-story/ (:num)'] = 'StoriesController/reactToStory/$1';
 $route['getFriendsStories/(:num)'] = 'StoriesController/getFriendsStories/$1';
 $route['delete-expired-stories'] = 'StoriesController/deleteExpiredStories';
 
