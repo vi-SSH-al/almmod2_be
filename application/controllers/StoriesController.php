@@ -120,26 +120,48 @@ class StoriesController extends CI_Controller {
             // Method to get all stories of a user
         
                 // Fetch stories from the model
-                $stories = $this->StoriesModel->getStories($userId);
+                //get all friend of user
+
+
+                // $stories = $this->StoriesModel->getStories($userId);
             
-                // Check if stories are returned
-                if (empty($stories)) {
-                    // If no stories found, return an empty array or a custom message
-                    return $this->output->set_content_type('application/json')
-                                        ->set_output(json_encode(["message"=>"no Stories with the specific iserId". $userId])); // Return an empty array
-                }
+                // // Check if stories are returned
+                // if (empty($stories)) {
+                //     // If no stories found, return an empty array or a custom message
+                //     return $this->output->set_content_type('application/json')
+                //                         ->set_output(json_encode(["message"=>"no Stories with the specific iserId". $userId])); // Return an empty array
+                // }
         
+                // // Add base URL to the media paths of each story
+                // foreach ($stories as &$story) {
+                //     $story['media_url'] = base_url($story['media_url']); // Add the base URL to media URL
+                // }
+        
+                // // Return the stories as JSON response
+                // return $this->output->set_content_type('application/json')
+                //                     ->set_output(json_encode($stories));
+                $friends = $this->FriendRequestModel->getFriendsList($userId);
+                $frds_id = [];
+                foreach ($friends as $frd) {
+                    array_push($frds_id, $frd['friend_id']);
+                }
+                $res = [];
+                foreach ($frds_id as $frd_id) {
+                    $res = array_merge($res, $this->StoriesModel->getStories($frd_id));
+                }
                 // Add base URL to the media paths of each story
-                foreach ($stories as &$story) {
+                foreach ($res as &$story) {
                     $story['media_url'] = base_url($story['media_url']); // Add the base URL to media URL
                 }
-        
-                // Return the stories as JSON response
+
                 return $this->output->set_content_type('application/json')
-                                    ->set_output(json_encode($stories));
+                                    ->set_output(json_encode($res));
             
-        
-        
+    }
+
+    // Get Stories of the logged in user
+    public function getMyStories($userId){
+
     }
     // Mark Story as Viewed
     public function markStoryAsViewed($storyId) {

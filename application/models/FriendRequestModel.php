@@ -55,7 +55,6 @@ $query = $this->db->query($sql, array($userId, $userId));
 
 // $friends will contain all friend IDs
 
-
     }
     public function deleterequest($requestId){
         $this->db->where('id',$requestId);

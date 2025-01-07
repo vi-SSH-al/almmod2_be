@@ -136,7 +136,7 @@ exit; // Terminate the script after the preflight response
         $request_id = $data['request_id']; // request_id 
         $user_id = $data['user_id']; // user_id
         //$user_id = $this->session->userdata('user_data');
-        var_dump($status,$request_id,$user_id);
+        // var_dump($status,$request_id,$user_id);
 
 
         if (!in_array($status, ['accepted', 'rejected'])) {
@@ -159,13 +159,13 @@ exit; // Terminate the script after the preflight response
               //  $this->FriendRequestModel->deleterequest($request_id);
                 return $this->output->set_status_header(200)
                                     ->set_content_type('application/json')
-                                    ->set_output(json_encode(['status' => 'success', 'message' => 'Request accepted successfully.']));
+                                    ->set_output(json_encode(['status' => 'success', 'message' => 'Request accepted successfully.','id'=>$request_id]));
             }   
             else{
                 $this->FriendRequestModel->deleterequest($request_id);
                 return $this->output->set_status_header(200)
                                     ->set_content_type('application/json')
-                                    ->set_output(json_encode(['status' => 'success', 'message' => 'Request rejected successfully.']));
+                                    ->set_output(json_encode(['status' => 'success', 'message' => 'Request rejected successfully.','id'=>$request_id]));
 
         }
         } else {
