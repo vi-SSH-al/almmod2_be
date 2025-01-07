@@ -133,15 +133,17 @@ class PostController extends CI_Controller {
 
          // getting user Id from session
         //$user_id = $this->session->userdata('user_id');
-        $user_id = $this->input->post('user_id');
+        $data = json_decode(file_get_contents('php://input'), true);
 
+        $user_id = $data['user_id'];
+    
         $commentData = [
             'post_id' => $postId,
             'user_id' => $user_id,
           //  'parent_comment_id' => $this->input->post('parent_comment_id'),
-            'content' => $this->input->post('content')
+            'content' => $data['content'],
         ];
-        $parent_comment = $this->input->post('parent_comment_id');
+        $parent_comment = $data['parent_comment_id'];
         if( $parent_comment){
             $commentData['parent_comment_id'] =  $parent_comment;
         }
