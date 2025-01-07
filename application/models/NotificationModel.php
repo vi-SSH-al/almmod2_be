@@ -24,7 +24,7 @@ class NotificationModel extends CI_Model {
         return $this->db->insert('notifications', $data);
     }
     public function addNotificationforPost($data) {
-        $frds = $data['frd'];
+        $frds = $data['user_ids'];
 
         foreach ($frds as $frd){
             $notificationdata =[

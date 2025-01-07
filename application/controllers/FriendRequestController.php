@@ -162,10 +162,10 @@ exit; // Terminate the script after the preflight response
                                     ->set_output(json_encode(['status' => 'success', 'message' => 'Request accepted successfully.']));
             }   
             else{
-            $this->FriendRequestModel->deleterequest($request_id);
-            return $this->output->set_status_header(200)
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['status' => 'success', 'message' => 'Request rejected successfully.']));
+                $this->FriendRequestModel->deleterequest($request_id);
+                return $this->output->set_status_header(200)
+                                    ->set_content_type('application/json')
+                                    ->set_output(json_encode(['status' => 'success', 'message' => 'Request rejected successfully.']));
 
         }
         } else {
@@ -188,8 +188,10 @@ exit; // Terminate the script after the preflight response
 
         $friends = $this->FriendRequestModel->getFriendsList($userId);
 
-        return $this->output->set_status_header(200)
+        return $this->output->set_status_header(200)    
                             ->set_content_type('application/json')
-                            ->set_output(json_encode(['status' => 'success', 'data' => $friends,"data2 is "=>$data2]));
+                            ->set_output(json_encode(['status' => 'success', 'data' => $friends]));
     }
 }
+
+?>

@@ -36,16 +36,26 @@ class FriendRequestModel extends CI_Model {
     }
     // Get the Friends list of a user
     public function getFriendsList($userId) {
-       // $this->db->group_start(); // Start a grouping for OR condition
-        $this->db->where('sender_id', $userId);
-        $this->db->or_where('receiver_id', $userId);
-        //$this->db->group_end(); // End the OR grouping
+       
+    //     $sql = "SELECT * FROM friend_requests 
+    //     WHERE (sender_id = ? OR receiver_id = ?) 
+    //     AND status = ?";
+
+    // $query = $this->db->query($sql, array($userId, $userId, 'accepted'));
+    // return $query->result_array();
+
+    $sql = "SELECT sender_id AS friend_id FROM friend_requests 
+        WHERE receiver_id = ? AND status = 'accepted'
+        UNION
+        SELECT receiver_id AS friend_id FROM friend_requests 
+        WHERE sender_id = ? AND status = 'accepted'";
         
-        // Apply the AND condition for the status
-        $this->db->where('status', "accepted");
-        
-        // Run the query and return the results
-        return $this->db->get('friend_requests')->result_array();
+$query = $this->db->query($sql, array($userId, $userId));
+    return $query->result_array();
+
+// $friends will contain all friend IDs
+
+
     }
     public function deleterequest($requestId){
         $this->db->where('id',$requestId);

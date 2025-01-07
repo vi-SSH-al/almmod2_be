@@ -41,7 +41,7 @@
 $route['default_controller'] = 'welcome';
 
 $route['translate_uri_dashes'] = FALSE;
-//$route['404_override'] = '';
+$route['404_override'] = '';
 // Friend Requests
 $route['send-friend-request'] = 'FriendRequestController/sendRequest';
 $route['get-requests/(:num)'] = 'FriendRequestController/getRequests/$1';
@@ -53,7 +53,8 @@ $route['get-friends/(:num)'] = 'FriendRequestController/getFriends/$1';
 $route['upload-story'] = 'StoriesController/uploadStory';
 $route['get-stories/(:num)'] = 'StoriesController/getStoriesofUser/$1';
 $route['mark-story-viewed/(:num)'] = 'StoriesController/markStoryAsViewed/$1';
-$route['react-to-story/(:num)'] = 'StoriesController/reactToStory/$1';
+$route['react-to-story/ (:num)'] = 'StoriesController/reactToStory/$1';
+$route['getFriendsStories/(:num)'] = 'StoriesController/getFriendsStories/$1';
 $route['delete-expired-stories'] = 'StoriesController/deleteExpiredStories';
 
 

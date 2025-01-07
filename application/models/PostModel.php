@@ -1,5 +1,5 @@
 <?php
-class PostsModel extends CI_Model {
+class PostModel extends CI_Model {
 
     public function __construct() {
         parent::__construct();
@@ -30,32 +30,22 @@ class PostsModel extends CI_Model {
 
     // Delete a post
     public function deletePost($postId, $userId) {
-        // $this->db->where('post_id', $postId);
-        // $this->db->where('user_id', $userId);
-        // $this->db->delete('posts');
-        $this->db->trans_start();
-
-        // First, delete all media associated with the post
         $this->db->where('post_id', $postId);
         $this->db->delete('media');  // Assuming the media table is called 'media'
     
         // Then, delete the post
         $this->db->where('post_id', $postId);
         // $this->db->where('user_id', $userId);
-        $this->db->delete('posts');
+        return $this->db->delete('posts');
     
         // Commit the transaction
-        $this->db->trans_complete();
-        if ($this->db->affected_rows() > 0) {
-            return ['status' => 'success', 'message' => 'Post deleted successfully'];
-        } else {
-            return ['status' => 'error', 'message' => 'Failed to delete post'];
-        }
+      //  $this->db->trans_complete();
+     
     }
 
     // Get feed with pagination
     public function getFeed($offset, $sort) {
-        $this->db->select('p.post_id, p.content, p.created_at, u.username, GROUP_CONCAT(m.media_url) as media');
+        $this->db->select('p.post_id, p.content, p.created_at, u.name, GROUP_CONCAT(m.media_url) as media');
         $this->db->from('posts p');
         $this->db->join('users u', 'u.user_id = p.user_id');
         $this->db->join('media m', 'm.post_id = p.post_id', 'left');
