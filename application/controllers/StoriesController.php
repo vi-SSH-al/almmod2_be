@@ -44,7 +44,7 @@ class StoriesController extends CI_Controller {
 
     // Upload a Story
     public function uploadStory() {
-
+        $data = json_decode(file_get_contents('php://input'), true);
     // getting user Id from cookies
     //$user_id = $this->session->userdata('user_id');
 
@@ -55,9 +55,13 @@ class StoriesController extends CI_Controller {
 // $_FILES['file']['error']: The error code (if any) related to the file upload (e.g., 0 means no error).
 // $_FILES['file']['size']: The size of the uploaded file in bytes
         // Check if a file is uploaded
-        if (empty($_FILES['media']['name'])) {
+        // if (!$this->input->post('media') || empty($_FILES['media']['name'])) {
+        //     return $this->output->set_content_type('application/json')
+        //                         ->set_output(json_encode(['status' => 'error', 'message' => 'No media file provided', 'file' => $_FILES, "user id id "=> $this->input->post('user_id')]));
+        // }x
+        if(!$data['media']|| empty($data['user_id'])){
             return $this->output->set_content_type('application/json')
-                                ->set_output(json_encode(['status' => 'error', 'message' => 'No media file provided']));
+            ->set_output(json_encode(['status' => 'error', 'message' => 'No media file provided', 'file' =>$data['media'], "user id id "=> $data['user_id']]));
         }
 
         // Configure upload settings
@@ -143,7 +147,8 @@ class StoriesController extends CI_Controller {
         // Validate input
         if (empty($storyId) || empty($viewerId)) {
             return $this->output->set_content_type('application/json')
-                                ->set_output(json_encode(['status' => 'error', 'message' => 'Story ID and Viewer ID are required']));
+                                ->set_output(json_encode(['status' => 'error', 'message' => 'Story ID and Viewer ID are required']))
+                                ->set_output(json_encode($viewerId));
         }
 
         // Mark story as viewed

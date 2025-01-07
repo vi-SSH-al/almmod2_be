@@ -1,17 +1,32 @@
 
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-header('Access-Control-Allow-Origin: *');  // Allow all origins
-        header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');  // Allow these methods
-        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+// header('Access-Control-Allow-Origin: *');  // Allow all origins
+// header('Access-Control-Allow-Methods: POST, GET, OPTIONS');  // Allow these methods
+//         // header('Access-Control-Allow-Headers: Content-Type:, Authorization');
+//     header('Access-Control-Allow-Headers:Origin,Accept,Content-Type, Authorization, X-Request-With');
+// header('Access-Control-Allow-Origin: *');  // Allow all origins
+//         header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');  // Allow these methods
+//         header('Access-Control-Allow-Headers: Content-Type, Authorization');
 class FriendRequestController extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
         $this->load->model('FriendRequestModel');
         $this->load->model('NotificationModel');
-        $this->load->library('form_validation'); // For input validation
-        
+        $this->load->library('form_validation'); // For input validation    
+        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+            header('Access-Control-Allow-Origin: *');
+            header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+            header('Access-Control-Allow-Headers: Content-Type, Authorization');
+            http_response_code(200);  // Respond with HTTP OK status
+exit; // Terminate the script after the preflight response
+        }
+
+        // CORS headers for other requests
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization'); 
     }
 
     /**
@@ -38,14 +53,14 @@ class FriendRequestController extends CI_Controller {
         // Validate input
         //$this->form_validation->set_data($data);
         $_POST=$data;   
-        $this->form_validation->set_rules('sender_id', 'Sender ID', 'required|numeric');
-        $this->form_validation->set_rules('receiver_id', 'Receiver ID', 'required|numeric');
+        // $this->form_validation->set_rules('sender_id', 'Sender ID', 'required|numeric');
+        // $this->form_validation->set_rules('receiver_id', 'Receiver ID', 'required|numeric');
 
-        if ($this->form_validation->run() == FALSE) {
-            return $this->output->set_status_header(400)
-                                ->set_content_type('application/json')
-                                ->set_output(json_encode(['status' => 'error','data'=>$data, 'message' => 'There has been an error in the input: ' . validation_errors()]));
-        }
+        // if ($this->form_validation->run() == FALSE) {
+        //     return $this->output->set_status_header(400)
+        //                         ->set_content_type('application/json')
+        //                         ->set_output(json_encode(['status' => 'error','data'=>$data, 'message' => 'There has been an error in the input: ' . validation_errors()]));
+        // }
 
         // Check if a request already exists
         if ($this->FriendRequestModel->checkExistingRequest($sender_id, $receiver_id)) {
@@ -83,7 +98,7 @@ class FriendRequestController extends CI_Controller {
     // params required: receiver_id  (current userid), status(optional) bydefault: pending
 
     // send data in query params
-    public function getRequests() {
+    public function getRequests($userId) {
         $type = $this->input->get('type') ?: 'pending';
         
         //        $data = $this->input->get() || json_decode(file_get_contents('php://input'), true);
@@ -94,7 +109,7 @@ class FriendRequestController extends CI_Controller {
             // If no query parameters, check the body (JSON).
             $data = json_decode(file_get_contents('php://input'), true);
         }
-        $userId = $data['user_id'];
+        // $userId = $data['user_id'];
         if (!$userId) {
 
             return $this->output->set_status_header(400)
@@ -114,10 +129,14 @@ class FriendRequestController extends CI_Controller {
      */
     //params required: requestid, 
     public function respondRequest() {
-        $status = $this->input->post('status'); // accepted/rejected
-        $request_id = $this->input->post('request_id'); // request id 
-        $user_id = $this->input->post('user_id');
+        //decode in json
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $status = $data['status']; // status
+        $request_id = $data['request_id']; // request_id 
+        $user_id = $data['user_id']; // user_id
         //$user_id = $this->session->userdata('user_data');
+        var_dump($status,$request_id,$user_id);
 
 
         if (!in_array($status, ['accepted', 'rejected'])) {

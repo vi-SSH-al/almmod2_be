@@ -44,8 +44,9 @@ $route['translate_uri_dashes'] = FALSE;
 //$route['404_override'] = '';
 // Friend Requests
 $route['send-friend-request'] = 'FriendRequestController/sendRequest';
-$route['get-requests'] = 'FriendRequestController/getRequests';
-$route['respond-friend-request'] = 'FriendRequestController/respondRequest';
+$route['get-requests/(:num)'] = 'FriendRequestController/getRequests/$1';
+// $route['respond-friend-request'] = 'FriendRequestController/respondRequest';
+$route['rfr'] = 'FriendRequestController/respondRequest';
 $route['get-friends/(:num)'] = 'FriendRequestController/getFriends/$1';
 
 // Stories
