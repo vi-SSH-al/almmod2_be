@@ -1,1 +1,6 @@
-Deny from all
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "http://127.0.0.1:5500"
+    Header set Access-Control-Allow-Methods "POST, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+    Header set Access-Control-Allow-Credentials "true"
+</IfModule>

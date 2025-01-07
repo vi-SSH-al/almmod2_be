@@ -60,9 +60,13 @@ class StoriesController extends CI_Controller {
         $user_id = $this->input->post('user_id');
 
         // Check if a file is uploaded
-        if (empty($_FILES['media']['name'])) {
+        // if (!$this->input->post('media') || empty($_FILES['media']['name'])) {
+        //     return $this->output->set_content_type('application/json')
+        //                         ->set_output(json_encode(['status' => 'error', 'message' => 'No media file provided', 'file' => $_FILES, "user id id "=> $this->input->post('user_id')]));
+        // }x
+        if(!$data['media']|| empty($data['user_id'])){
             return $this->output->set_content_type('application/json')
-                                ->set_output(json_encode(['status' => 'error', 'message' => 'No media file provided']));
+            ->set_output(json_encode(['status' => 'error', 'message' => 'No media file provided', 'file' =>$data['media'], "user id id "=> $data['user_id']]));
         }
 
         // Configure upload settings
@@ -148,7 +152,8 @@ class StoriesController extends CI_Controller {
         // Validate input
         if (empty($storyId) || empty($viewerId)) {
             return $this->output->set_content_type('application/json')
-                                ->set_output(json_encode(['status' => 'error', 'message' => 'Story ID and Viewer ID are required']));
+                                ->set_output(json_encode(['status' => 'error', 'message' => 'Story ID and Viewer ID are required']))
+                                ->set_output(json_encode($viewerId));
         }
 
         // Mark story as viewed

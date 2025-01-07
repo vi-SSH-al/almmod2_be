@@ -14,6 +14,8 @@ class NotificationController extends CI_Controller {
     }
 
     public function getNotificationofUser($userId){
+        //from param
+        // $userId = $this->input->get('user_id');
         $response = $this->NotificationModel->getNotifications($userId);
 
         if($response){
