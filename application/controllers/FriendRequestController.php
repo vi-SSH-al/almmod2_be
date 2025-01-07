@@ -127,7 +127,6 @@ class FriendRequestController extends CI_Controller {
         $status = $data['status'];
         $request_id = $data['request_id'];
         $user_id = $data['user_id'];
-        
 
         if (!in_array($status, ['accepted', 'rejected'])) {
             return $this->output->set_status_header(400)
